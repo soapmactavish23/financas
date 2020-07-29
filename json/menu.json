@@ -1,0 +1,29 @@
+{ 
+	"title": "Finanças da Leida",
+	"items": [
+		{ "label": "Conta", 
+			"subitems": [
+			  { "id": "conta", "label": "Cadastrar" },
+			  { "id": "conta-consulta", "label": "Consultar" }
+			]
+		},
+		{ "label": "Cartão de Crédito", 
+			"subitems": [
+			  { "id": "cartao", "label": "Cadastrar" },
+			  { "id": "cartao-consulta", "label": "Consultar" }
+			]
+		},
+		{ "label": "Tramitação", 
+			"subitems": [
+			  { "id": "tramitacao", "label": "Cadastrar" },
+			  { "id": "tramitacao-consulta", "label": "Consultar" }
+			]
+		},
+		{ "label": "Usuário", 
+		  "subitems": [
+			{ "id": "usuario", "label": "Cadastrar usuário" },
+			{ "id": "mudasenha", "label": "Mudar senha do usuário", "visible" : false }
+			]
+		}
+	]
+}

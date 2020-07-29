@@ -1,0 +1,75 @@
+body {
+	padding-top: 4rem;
+	padding-bottom: 1rem;
+	height: 100vh;
+	background: url('../img/background.jpg') fixed;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+.footer {
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	z-index: 9;
+}
+
+/* The Container (background) */
+.container {
+	padding: 1!important;
+	background-color: rgba(255,255,255, 0.85); /* Black w/ opacity */
+}
+.container > h1 {
+	font-size: 32px;
+	padding: 10px 0px 10px 0px;	
+	border-bottom: 1px solid #ccc;
+}
+
+/* The Modal (background) */
+.modal {
+	padding: 0!important;
+	background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+	border: 1px solid #888;
+    margin: 0 auto;	
+}
+
+.modal-header, .close {
+	background-color: #084d6e;
+    color: white;
+	border-radius: 2% 2% 0% 0%;	
+}
+
+.close {
+	font-size: 35px;
+	font-weight: bold;	
+}
+
+.close:hover, .close:focus {
+	color: red;
+}
+
+.modal-footer {
+	background-color: #f1f1f1;
+	border-radius: 0% 0% 2% 2%;	
+}
+
+.form-group > input, .form-group > select {
+	*border: 0px;
+	*border-bottom: 1px solid #777;
+	*border-radius: 0%;
+}
+
+/* dataTables */
+td.details-control {
+    *background: url('../resources/details_close.png') no-repeat center center;
+    cursor: pointer;
+}
+
+tr.shown td.details-control {
+    *background: url('../resources/details_close.png') no-repeat center center;
+    cursor: pointer;
+}

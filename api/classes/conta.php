@@ -16,7 +16,23 @@ class conta extends database {
 			}
 			return array( 'data' => $rows );
 		}
-    }
+	}
+	
+	public function obterConta(){
+		global $_user;
+		$sql = "SELECT idconta, concat(instituicao, ' / ' ,nome_conta) as conta FROM conta WHERE idusuario = $_user->id_usuario";
+	
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
+		}
+	}
 
     public function obterInstituicoes() {
 		$sql = "SELECT DISTINCT instituicao FROM conta";
@@ -79,6 +95,30 @@ class conta extends database {
 			return array ( 'idconta' => $this->idconta );
 		}	
 	}
+
+	public function contarSaldoGeral(){
+		global $_user;
+		$sql = "SELECT SUM(saldo) as saldo FROM conta WHERE idusuario = $_user->id_usuario";
+		if ( $rs = parent::fetch_all($sql) ) {
+			return array( 'data' => $rs );
+		}
+	}
+
+	public function contarContas(){
+		global $_user;
+		$sql = "SELECT instituicao, saldo FROM conta WHERE idusuario = $_user->id_usuario";
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
+		}
+	}
+
 }
 
 ?>

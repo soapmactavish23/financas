@@ -1,59 +1,33 @@
-<h3 class="text-center">Registro de Veículo</h3>
+<h3 id="nome-usuario" class="text-center"></h3>
 <hr>
-<div id='situacao-denuncia' class='panel'>
-	<div class='h6 text-center'>Situação de <span class='h4' id='atualizadas'></span> veículos atualizados <span id='span-periodo'></span></div>
-	<div class="row" id="situacao-veiculos">
-		<div class='col-lg-2 col-md-4 col-sm-6 mb-1'>
-			<div class='card shadow bg-danger text-white text-center'>
-				<h2 class='card-title' id='busca-apreensao'>0</h2>
-				<div class='card-text'>Busca e Apreensao<br></div>
-			</div> 
-		</div>
-		<div class='col-lg-2 col-md-4 col-sm-6 mb-1'>
-			<div class='card shadow bg-warning text-white text-center'>
-				<h2 class='card-title' id='clonado'>0</h2>
-				<div class='card-text'>Clonado<br></div>
-			</div> 
-		</div>
-		<div class='col-lg-2 col-md-4 col-sm-6 mb-1'>
-			<div class='card shadow bg-primary text-white text-center'>
-				<h2 class='card-title' id='furtado'>0</h2>
-				<div class='card-text'>Furtado<br></div>
-			</div> 
-		</div>
-		<div class='col-lg-2 col-md-4 col-sm-6 mb-1'>
-			<div class='card shadow bg-info text-white text-center'>
-				<h2 class='card-title' id='recuperado'>0</h2>
-				<div class='card-text'>Recuperado<br></div>
-			</div> 	
-		</div>
-		<div class='col-lg-2 col-md-4 col-sm-6 mb-1'>
-			<div class='card shadow bg-success text-white text-center'>
-				<h2 class='card-title' id='roubados'>0</h2>
-				<div class='card-text'>Roubado<br></div>
-			</div> 	
-		</div>
-		<div class='col-lg-2 col-md-4 col-sm-6 mb-1'>
-			<div class='card shadow bg-dark text-white text-center'>
-				<h2 class='card-title' id='total'>0</h2>
-				<div class='card-text'>Total<br></div>
-			</div>
+<div class="row">
+	<div class="col-sm-10">
+	</div>
+	<div class="col-sm-2">
+		<div class='card shadow bg-success text-white text-center'>
+			<h2 class='card-title' id='saldo-geral'>0</h2>
+			<div class='card-text'>Saldo Geral<br></div>
 		</div>
 	</div>
 </div>
-<div class="row">
-	<canvas id="panel-situacao" style="display: block; height: 310px; width: 621px;" width="558" height="278"></canvas>
-</div>
 <hr>
-<div id='marca-veiculo' class='panel'>
-	<div class='h6 text-center'>
-		Situação de <span class='h4' id='atualizadas'></span> marcas de veículos atualizados <span id='span-periodo'></span>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-6 card shadow h-40">
+			<canvas id="painel-contas"></canvas>
+		</div>
+		<div class="col-sm-6 card shadow h-40">
+			<canvas id="painel-despesa"></canvas>
+		</div>
 	</div>
-	<div class="row" id="marcas-veiculos"></div>
+	<div class="row">
+		<div class="col-sm-6 card shadow h-40">
+			<canvas id="painel-receita"></canvas>
+		</div>
+		<div class="col-sm-6 card shadow h-40">
+			<canvas id="painel-despesa"></canvas>
+		</div>
+	</div>
 </div>
-
-<div class="row">
-	<canvas id="panel-marcas"></canvas>
-</div>
-
+<br>
 <script src="js/dashboard.js"></script>

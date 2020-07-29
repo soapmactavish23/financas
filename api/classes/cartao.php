@@ -15,7 +15,23 @@ class cartao extends database {
 			}
 			return array( 'data' => $rows );
 		}
-    }
+	}
+	
+	public function obterCartao(){
+		global $_user;
+		$sql = "SELECT idcartao, concat(instituicao, ' / ' ,nome_cartao) as cartao FROM cartao WHERE idusuario = $_user->id_usuario";
+	
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
+		}
+	}
 
     public function obterInstituicoes() {
 		$sql = "SELECT DISTINCT instituicao FROM cartao";

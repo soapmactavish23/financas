@@ -1,10 +1,12 @@
 $('.modal-title').text('Nova Conta');
+$('#btn-excluir').hide();
 //Listar indicadores
 if(data){ 
     $('.modal-title').text(data.nome_conta);
 	$('input[name="idconta"]').val(data.idconta);
     $('input[name="nome_conta"]').val(data.nome_conta);
-    $('input[name="saldo"]').val(data.saldo);
+	$('input[name="saldo"]').val(data.saldo);
+	$('#btn-excluir').show();
 }
 
 //Select Picker para Instituição
@@ -19,11 +21,6 @@ $.ajax({
 		$.each( result.data, function(index, element) {
 			selectInstituicao.append( $('<option>', {value: element.instituicao, text: element.instituicao}) );
 		});
-
-		selectInstituicao.html(selectInstituicao.find('option').sort(function(x, y) {
-			// to descending order switch "<" for ">"
-			return $(x).text() > $(y).text() ? 1 : -1;
-		}));
 
 		if (data) selectInstituicao.val(data.instituicao);
 		else selectInstituicao.val(null);	

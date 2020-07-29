@@ -4,13 +4,13 @@
 		{ "label": "Conta", 
 			"subitems": [
 			  { "id": "conta", "label": "Cadastrar" },
-			  { "id": "conta-consulta", "label": "Consultar" }
+			  { "id": "conta-consulta", "label": "Consultar" , "visible": false}
 			]
 		},
 		{ "label": "Cartão de Crédito", 
 			"subitems": [
 			  { "id": "cartao", "label": "Cadastrar" },
-			  { "id": "cartao-consulta", "label": "Consultar" }
+			  { "id": "cartao-consulta", "label": "Consultar" , "visible": false}
 			]
 		},
 		{ "label": "Tramitação", 

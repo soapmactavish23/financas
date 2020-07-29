@@ -1,12 +1,19 @@
+//Apresentar o nome de usuário
+$('#nome-usuario').text("Olá " + user.nome);
+
+//Recuperar o saldo geral
+var saldo_geral = $.ajax({
+    url: url + '/api.php',
+    type: "POST",
+    data: {classe: 'conta', metodo: 'contarSaldoGeral', token: token},
+    success: function(result){
+        $.each(result.data, function (i, vet) {
+            $('#saldo-geral').text(vet.saldo);
+        });
+    }
+});
+
 var coresBootstrap = [
-    '#d9534f',
-    '#f0ad4e',
-    '#0275d8',
-    '#5bc0de',
-    '#5cb85c',
-    '#292b2c'
-];
-var coresMarcas = [
     '#d9534f',
     '#f0ad4e',
     '#0275d8',
@@ -24,73 +31,66 @@ var coresMarcas = [
     '#2b2537',
     '#25372b'
 ];
-var chartSituacao = new Chart( $('#panel-situacao'),{
+
+//Gráfico de contas
+var chartContas = new Chart($('#painel-contas'),{
     type: 'doughnut',
     data: {
-        labels: [],
         datasets: [{
-            label: 'Registradas',
             data: [],
-            backgroundColor: coresBootstrap,
-            borderColor: 'rgba(0, 0, 0, 0.0)',
-            borderWidth: 2
-        }]
+            backgroundColor: coresBootstrap
+        }],
+        labels: []
     },
     options: {
         responsive: true,
+        legend: {
+            position: 'bottom',
+        },
         title: {
             display: true,
+            text: 'Todas as Contas Bancárias',
             fontSize: 16,
-            fontFamily: 'Arial',
-            text: 'Todas as Situações'
+            fontFamily: 'Arial'
         },
-        elements: {
-            rectangle: {
-                borderWidth: 2,
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+});		
+
+var graficoContas = $.ajax({
+    url: url + '/api.php',
+    type: 'POST',
+    data: {classe: 'conta', metodo: 'contarContas', token: token},
+    success: function(result){
+        console.log(result);
+        if(result.error){
+            console.log(result.error);
+        }else{
+            if(result.data){
+                chartContas.data.labels = [];
+                chartContas.data.datasets[0].data = [];
+                $.each(result.data, function(i, vet){
+                    chartContas.data.labels.push(vet.instituicao);
+                    chartContas.data.datasets[0].data.push(parseInt(vet.saldo));
+                });
+                chartContas.update();
             }
-        },
-        legend: {
-            display: false,
-            position: 'right',
         }
     }
 });
 
-$.ajax({
-    url: url + '/api.php',
-    type: 'POST',
-    data: {classe: 'veiculo', metodo: 'contarSituacao', token: token},
-    success: function(result){
-        var busca = parseInt(result.data[0].total);
-        var clonado = parseInt(result.data[1].total);
-        var furtado = parseInt(result.data[2].total);
-        var recuperado = parseInt(result.data[3].total);
-        var roubados = parseInt(result.data[4].total);
-        var resultadoTotal = busca + clonado + furtado + recuperado + roubados;
-        $('#busca-apreensao').text(busca);
-        $('#clonado').text(clonado);
-        $('#furtado').text(furtado);
-        $('#recuperado').text(recuperado);
-        $('#roubados').text(roubados);
-        $('#total').text(resultadoTotal);
-        chartSituacao.data.labels = [];
-        chartSituacao.data.datasets[0].data = [];
-        $.each( result.data, function(i, field) {
-            chartSituacao.data.labels.push(field.situacao);
-            chartSituacao.data.datasets[0].data.push(parseInt(field.total));
-        });
-        chartSituacao.update();
-    }
-});
-
-var chartMarcas = new Chart( $('#panel-marcas'), {
+//Gráfico de despesas
+var chartDespesas = new Chart( $('#painel-despesa'), {
     type: 'horizontalBar',
     data: {
         labels: [],
         datasets: [{
-            label: 'Registradas',
+            label: 'Valor',
             data: [],
-            backgroundColor: coresMarcas,
+            backgroundColor: coresBootstrap,
             borderColor: 'rgba(0, 0, 0, 0.0)',
             borderWidth: 2,
         }]
@@ -101,7 +101,7 @@ var chartMarcas = new Chart( $('#panel-marcas'), {
             display: true,
             fontSize: 16,
             fontFamily: 'Arial',
-            text: 'Todas as marcas roubadas'
+            text: 'Todas as Despesas por Categória'
         },
         elements: {
             rectangle: {
@@ -130,24 +130,86 @@ var chartMarcas = new Chart( $('#panel-marcas'), {
     }
 });
 
-$.ajax({
+var graficoDespesa = $.ajax({
     url: url + '/api.php',
     type: 'POST',
-    data: {classe: 'veiculo', metodo: 'contarMarcas', token: token},
+    data: {classe: 'tramitacao', metodo: 'contarDespesas', token: token},
     success: function(result){
-        if(result.error){
-            console.log(result.error);
-        }else{
-            if(result.data){
-                chartMarcas.data.labels = [];
-                chartMarcas.data.datasets[0].data = [];
-                $.each(result.data, function(i, vet){
-                    $('#marcas-veiculos').append("<div class='col-lg-2 col-md-4 col-sm-6 mb-1'><div class='card shadow text-white text-center' style='background-color: "+coresMarcas[i]+";'><h2 class='card-title'>"+vet.tot+"</h2><div class='card-text'>"+vet.marca+"<br></div></div></div>");
-                    chartMarcas.data.labels.push(vet.marca);
-                    chartMarcas.data.datasets[0].data.push(parseInt(vet.tot));
-                });
-                chartMarcas.update();
+        chartDespesas.data.labels = [];
+        chartDespesas.data.datasets[0].data = [];
+        $.each(result.data, function(i, vet){
+            chartDespesas.data.labels.push(vet.categoria);
+            chartDespesas.data.datasets[0].data.push(parseInt(vet.valor));
+        });
+        chartDespesas.update();
+    }
+});
+
+
+//Gráfico de Receita
+var chartReceita = new Chart( $('#painel-receita'), {
+    type: 'horizontalBar',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Valor',
+            data: [],
+            backgroundColor: coresBootstrap,
+            borderColor: 'rgba(0, 0, 0, 0.0)',
+            borderWidth: 2,
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            fontSize: 16,
+            fontFamily: 'Arial',
+            text: 'Todas as Receitas por Categória'
+        },
+        elements: {
+            rectangle: {
+                borderWidth: 2,
             }
+        },
+        legend: {
+            display: false,
+            position: 'right',
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                ticks: { 
+                    beginAtZero: true
+                }
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: false,
+                    labelString: 'Período'
+                }
+            }],
         }
     }
 });
+
+var graficoReceita = $.ajax({
+    url: url + '/api.php',
+    type: 'POST',
+    data: {classe: 'tramitacao', metodo: 'contarReceitas', token: token},
+    success: function(result){
+        chartReceita.data.labels = [];
+        chartReceita.data.datasets[0].data = [];
+        $.each(result.data, function(i, vet){
+            chartReceita.data.labels.push(vet.categoria);
+            chartReceita.data.datasets[0].data.push(parseInt(vet.valor));
+        });
+        chartReceita.update();
+    }
+});
+
+setInterval(saldo_geral, 120000);
+setInterval(graficoContas, 120000);
+setInterval(graficoDespesa, 120000);
+setInterval(graficoReceita, 120000);

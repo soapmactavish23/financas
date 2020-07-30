@@ -65,7 +65,6 @@ var graficoContas = $.ajax({
     type: 'POST',
     data: {classe: 'conta', metodo: 'contarContas', token: token},
     success: function(result){
-        console.log(result);
         if(result.error){
             console.log(result.error);
         }else{
@@ -77,6 +76,58 @@ var graficoContas = $.ajax({
                     chartContas.data.datasets[0].data.push(parseInt(vet.saldo));
                 });
                 chartContas.update();
+            }
+        }
+    }
+});
+
+//Gráfico de painel-dt-conta
+var chartDtDespesas = new Chart($('#painel-dt-conta'),{
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Valor',
+            data: [],
+            backgroundColor: coresBootstrap,
+            borderColor: 'rgba(0, 0, 0, 0.0)',
+            borderWidth: 2,
+        }]
+    },
+    options: {
+        responsive: true,
+        legend: {
+            position: 'bottom',
+        },
+        title: {
+            display: true,
+            text: 'Data de Pagamento das Despesas',
+            fontSize: 16,
+            fontFamily: 'Arial'
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+});		
+
+var graficoDtDespesa = $.ajax({
+    url: url + '/api.php',
+    type: 'POST',
+    data: {classe: 'tramitacao', metodo: 'obterDtDespesa', token: token},
+    success: function(result){
+        if(result.error){
+            console.log(result.error);
+        }else{
+            if(result.data){
+                chartDtDespesas.data.labels = [];
+                chartDtDespesas.data.datasets[0].data = [];
+                $.each(result.data, function(i, vet){
+                    chartDtDespesas.data.labels.push(vet.dt);
+                    chartDtDespesas.data.datasets[0].data.push( parseInt(vet.valor) );
+                });
+                chartDtDespesas.update();
             }
         }
     }
@@ -140,6 +191,7 @@ var graficoDespesa = $.ajax({
         $.each(result.data, function(i, vet){
             chartDespesas.data.labels.push(vet.categoria);
             chartDespesas.data.datasets[0].data.push(parseInt(vet.valor));
+
         });
         chartDespesas.update();
     }
@@ -211,5 +263,6 @@ var graficoReceita = $.ajax({
 
 setInterval(saldo_geral, 120000);
 setInterval(graficoContas, 120000);
+setInterval(graficoDtDespesa, 120000);
 setInterval(graficoDespesa, 120000);
 setInterval(graficoReceita, 120000);

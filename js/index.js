@@ -63,6 +63,21 @@ if ( sessionStorage.getItem('token') ) {
 			location.reload(true);			
 		}
 	}
+
+	//Descontar todas as tramitacoes pendentes
+	$.ajax({
+		url: url + '/api.php',
+		type: 'POST',
+		data: {classe: 'tramitacao', metodo: 'descontar', token: token},
+		success: function(result){
+			if(result.error){
+				console.log(result.error);
+			}else{
+				console.log(result.success);
+			}
+		}
+	});
+
 } else {
 	$('nav').hide();
 	$('main').hide();

@@ -45,26 +45,23 @@ class tramitacao extends database {
         $this->valor = (@ $_REQUEST['valor']);
         $this->tipo_tramitacao = (@ $_REQUEST['tipo_tramitacao']);
         $this->data = (@ $_REQUEST['data']);
-    
-        if($this->idconta){
-            if($this->tipo_tramitacao == "RECEITA"){
-				$this->execute("UPDATE conta SET saldo = saldo + $this->valor WHERE idconta = $this->idconta");
-			}else{
-				$this->execute("UPDATE conta SET saldo = saldo - $this->valor WHERE idconta = $this->idconta");
-			}
-        }else{
-			if($this->tipo_tramitacao == "RECEITA"){
-				$this->execute("UPDATE cartao SET limite = limite + $this->valor WHERE idcartao = $this->idcartao");
-			}else{
-				$this->execute("UPDATE cartao SET limite = limite - $this->valor WHERE idcartao = $this->idcartao");
-			}
-		}
+		$this->descontado = 'N';
 		
 		if ( $this->idtramitacao ) {
 			$this->dt_update = date('Y-m-d H:i:s');
 			$this->update();
 		} else {
 			$this->idtramitacao = $this->insert();
+
+			if($this->data == date('Y-m-d')){
+				if($this->tipo_tramitacao == "RECEITA"){
+					$this->execute("UPDATE conta SET saldo = saldo + $this->valor WHERE idconta = $this->idconta");
+				}else{
+					$this->execute("UPDATE conta SET saldo = saldo - $this->valor WHERE idconta = $this->idconta");
+				}
+				$this->descontado = 'S';
+			}
+
 		}
 		
 		$this->saveLog('Salvou tramitacao ID '.$this->idtramitacao, $_user->id_usuario);
@@ -73,12 +70,37 @@ class tramitacao extends database {
 
 	public function excluir() {
 		if ( @ $_REQUEST['idtramitacao'] ) {
-			$this->idtramitacao = $_REQUEST['idtramitacao'];	
+			$this->idtramitacao = $_REQUEST['idtramitacao'];
 			$this->delete();
+			$idconta = $_REQUEST['idconta'];
+			$tipo_tramitacao = $_REQUEST['tipo_tramitacao'];
+			$valor = $_REQUEST['valor'];
+
+			if($tipo_tramitacao == 'RECEITA'){
+				$this->execute("UPDATE conta SET saldo = saldo - $valor WHERE idconta = $idconta");
+			}else{
+				$this->execute("UPDATE conta SET saldo = saldo + $valor WHERE idconta = $idconta");
+			}
+
 			global $_user;
 			$this->saveLog('Excluir tramitacao ID '.$this->idtramitacao, $_user->id_usuario);
 			return array ( 'idtramitacao' => $this->idtramitacao );
 		}	
+	}
+
+	public function obterDtDespesa(){
+		global $_user;
+		$sql = "SELECT concat(DAY(data), '/0', MONTH(data)) as dt, valor FROM tramitacao WHERE (idusuario = $_user->id_usuario AND data>=current_date) AND tipo_tramitacao like 'DESPESA'";
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
+		}
 	}
 
 	public function contarDespesas(){
@@ -118,6 +140,34 @@ class tramitacao extends database {
 			return array( 'data' => $rows );
 		}
 	}
+
+	public function descontar(){
+		global $_user;
+		$sql = "SELECT idtramitacao, idconta, tipo_tramitacao, valor FROM tramitacao WHERE (idusuario = $_user->id_usuario AND descontado = 'N') AND data<=current_date";
+		if ( $rs = parent::fetch_all($sql) ) {
+			
+			$vet = array_shift($rs);
+			$idconta = $vet['idconta'];
+			$tipo_tramitacao = $vet['tipo_tramitacao'];
+			$valor = $vet['valor'];
+
+			if($tipo_tramitacao == "RECEITA"){
+				$this->execute("UPDATE conta SET saldo = saldo + $valor WHERE idconta = $idconta");
+			}else{
+				$this->execute("UPDATE conta SET saldo = saldo - $valor WHERE idconta = $idconta");
+			}
+
+			$this->execute("UPDATE tramitacao SET descontado = 'S' WHERE idusuario = $_user->id_usuario AND data<=current_date");
+	
+			return array('success' => 'Tramitações descontadas com sucesso');
+
+		}else{
+
+			return array('error' => 'Nenhuma Tramitação a ser Descontada');
+			
+		}
+	}
+
 }
 
 ?>

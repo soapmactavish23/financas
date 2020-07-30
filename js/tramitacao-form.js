@@ -114,7 +114,14 @@ $('#btn-excluir').click(function(){
 		data.push({name: 'classe', value: 'tramitacao'});
 		data.push({name: 'metodo', value: 'excluir'});
 		data.push({name: 'token', value: token});
-		data.push({name: 'idtramitacao', value: $('input[name="idtramitacao"]').val()});
+		data.push(
+			{
+				name: 'idtramitacao', value: $('input[name="idtramitacao"]').val(),
+				name: 'idconta', value: $('select[name="idconta"]').val(),
+				name: 'tipo_tramitacao', value: $('select[name="tipo_tramitacao"]').val(),
+				name: 'valor', value: $('input[name="valor"]').val()
+			}
+		);
 
 		$.post( url + '/api.php', data, function (result) {
 			if ( result.error ) {

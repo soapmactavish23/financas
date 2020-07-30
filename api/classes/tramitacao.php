@@ -47,6 +47,12 @@ class tramitacao extends database {
         $this->data = (@ $_REQUEST['data']);
 		$this->descontado = 'N';
 		
+		if($_REQUEST['fixo']){
+			$this->fixo = 'S';
+		}else{
+			$this->fixo = 'N';
+		}
+		
 		if ( $this->idtramitacao ) {
 			$this->dt_update = date('Y-m-d H:i:s');
 			$this->update();
@@ -143,7 +149,7 @@ class tramitacao extends database {
 
 	public function descontar(){
 		global $_user;
-		$sql = "SELECT idtramitacao, idconta, tipo_tramitacao, valor FROM tramitacao WHERE (idusuario = $_user->id_usuario AND descontado = 'N') AND data<=current_date";
+		$sql = "SELECT idtramitacao, idconta, tipo_tramitacao, valor FROM tramitacao WHERE (idusuario = $_user->id_usuario AND descontado = 'N') AND (data<=current_date AND fixo = 'N')";
 		if ( $rs = parent::fetch_all($sql) ) {
 			
 			$vet = array_shift($rs);
@@ -162,9 +168,38 @@ class tramitacao extends database {
 			return array('success' => 'Tramitações descontadas com sucesso');
 
 		}else{
-
+			
 			return array('error' => 'Nenhuma Tramitação a ser Descontada');
 			
+		}
+	}
+
+	public function descontarFixas(){
+		global $_user;
+		$sql = "SELECT idtramitacao, idconta, tipo_tramitacao, valor, data
+		FROM tramitacao 
+		WHERE idusuario = $_user->id_usuario AND (MONTH(data)<=MONTH(CURDATE()) AND fixo = 'S')";	
+
+		if ( $rs = parent::fetch_all($sql) ) {
+					
+			$vet = array_shift($rs);
+			$idtramitacao = $vet['idtramitacao'];
+			$idconta = $vet['idconta'];
+			$tipo_tramitacao = $vet['tipo_tramitacao'];
+			$valor = $vet['valor'];
+			$data = $vet['data'];
+
+			if($tipo_tramitacao == "RECEITA"){
+				$this->execute("UPDATE conta SET saldo = saldo + $valor WHERE idconta = $idconta");
+			}else{
+				$this->execute("UPDATE conta SET saldo = saldo - $valor WHERE idconta = $idconta");
+			}
+
+			$this->execute("UPDATE tramitacao SET data = DATE_ADD(CURDATE(), INTERVAL 1 MONTH) WHERE idtramitacao = $idtramitacao");
+
+			return array('success' => 'Tramitações descontadas com sucesso');
+		}else{
+			return array('error' => 'Nenhuma Tramitação a ser Descontada');	
 		}
 	}
 

@@ -5,7 +5,7 @@
     </div>
     <div class="modal-body">
         <input type='hidden' name='idtramitacao'>
-        <div class="form-group">
+        <div class="form-group" hidden>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="radio-cartao" name="gender" value="cartao">
                 <label class="form-check-label" for="radio-cartao">Cartão de Crédito</label>
@@ -39,24 +39,30 @@
                 required></select>
             </div>
         </div>
-        <div class='row'>
-            <div class="col-sm-4">
-                <label for='tipo_tramitacao'>Tipo de Tramitação</label>
-                <select class='form-control' id='tipo_tramitacao' name='tipo_tramitacao' data-live-search='true' required>
-                    <option>RECEITA</option>
-                    <option>DESPESA</option>
-                </select>
-            </div>
-            <div class="col-sm-4">
-                <label for='valor'>Valor</label>
-                <input class='form-control' type='number' id='valor' name='valor'
-                placeholder='Digite o valor' required>
-            </div>
-            <div class="col-sm-4">
-                <label for='data'>Data</label>
-                <input class='form-control' type='date' id='data' name='data' required>
+        <div class="form-group">
+            <div class='row'>
+                <div class="col-sm-4">
+                    <label for='tipo_tramitacao'>Tipo de Tramitação</label>
+                    <select class='form-control' id='tipo_tramitacao' name='tipo_tramitacao' data-live-search='true' required>
+                        <option>RECEITA</option>
+                        <option>DESPESA</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label for='valor'>Valor</label>
+                    <input class='form-control' type='number' id='valor' name='valor'
+                    placeholder='Digite o valor' required>
+                </div>
+                <div class="col-sm-4">
+                    <label for='data'>Data</label>
+                    <input class='form-control' type='date' id='data' name='data' required>
+                </div>
             </div>
         </div>
+        <div class="form-check">
+			<input class="form-check-input" type="checkbox" id="fixo" name='fixo'>
+			<label class="form-check-label" for="fixo">Fixo</label>
+		</div>
     </div>
     <div class="modal-footer">
         <button class='btn btn-success' type='submit'>Salvar</button>

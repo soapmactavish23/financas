@@ -1,28 +1,30 @@
 $('.modal-title').text('Nova Tramitação');
 $('#btn-excluir').hide();
-$('#form-conta').hide();
+// $('#form-conta').hide();
 $('#form-cartao').hide();
 if(data){
     $('.modal-title').text('Tramitação #' + data.idtramitacao);
     $('input[name="idtramitacao"]').val(data.idtramitacao);
     $('input[name="descricao"]').val(data.descricao);
     $('input[name="valor"]').val(data.valor);
-    $('input[name="data"]').val(data.data);
-    $('#btn-excluir').show();
+	$('input[name="data"]').val(data.data);
+	$('select[name="tipo_tramitacao"]').val(data.tipo_tramitacao);
+	$('#btn-excluir').show();
+	if (data.fixo=='S') $('#fixo').prop('checked',true);
 }
 
 //Conta ou cartao
-$('input[id="radio-conta"]').click(function(){
-    $('#form-conta').show();
-	$('#form-cartao').hide();
-	$('#idcartao').val(null);
+// $('input[id="radio-conta"]').click(function(){
+//     $('#form-conta').show();
+// 	$('#form-cartao').hide();
+// 	$('#idcartao').val(null);
 	
-});
-$('input[id="radio-cartao"]').click(function(){
-    $('#form-conta').hide();
-	$('#form-cartao').show();
-	$('#idconta').val(null);
-});
+// });
+// $('input[id="radio-cartao"]').click(function(){
+//     $('#form-conta').hide();
+// 	$('#form-cartao').show();
+// 	$('#idconta').val(null);
+// });
 
 //Select Picker para conta
 var selectConta = $('select[name="idconta"]');
@@ -114,15 +116,10 @@ $('#btn-excluir').click(function(){
 		data.push({name: 'classe', value: 'tramitacao'});
 		data.push({name: 'metodo', value: 'excluir'});
 		data.push({name: 'token', value: token});
-		data.push(
-			{
-				name: 'idtramitacao', value: $('input[name="idtramitacao"]').val(),
-				name: 'idconta', value: $('select[name="idconta"]').val(),
-				name: 'tipo_tramitacao', value: $('select[name="tipo_tramitacao"]').val(),
-				name: 'valor', value: $('input[name="valor"]').val()
-			}
-		);
-
+		data.push({name: 'idtramitacao', value: $('input[name="idtramitacao"]').val()});
+		data.push({name: 'idconta', value: $('select[name="idconta"]').val()});
+		data.push({name: 'tipo_tramitacao', value: $('select[name="tipo_tramitacao"]').val()});
+		data.push({name: 'valor', value: $('input[name="valor"]').val()});
 		$.post( url + '/api.php', data, function (result) {
 			if ( result.error ) {
 				alert(result.error);

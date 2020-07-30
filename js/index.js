@@ -78,6 +78,20 @@ if ( sessionStorage.getItem('token') ) {
 		}
 	});
 
+	//Descontar todas as tramitacoes fixas pendentes
+	$.ajax({
+		url: url + '/api.php',
+		type: 'POST',
+		data: {classe: 'tramitacao', metodo: 'descontarFixas', token: token},
+		success: function(result){
+			if(result.error){
+				console.log(result.error);
+			}else{
+				console.log(result.success);
+			}
+		}
+	});
+
 } else {
 	$('nav').hide();
 	$('main').hide();

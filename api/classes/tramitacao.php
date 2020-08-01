@@ -81,11 +81,14 @@ class tramitacao extends database {
 			$idconta = $_REQUEST['idconta'];
 			$tipo_tramitacao = $_REQUEST['tipo_tramitacao'];
 			$valor = $_REQUEST['valor'];
+			
 
-			if($tipo_tramitacao == 'RECEITA'){
-				$this->execute("UPDATE conta SET saldo = saldo - $valor WHERE idconta = $idconta");
-			}else{
-				$this->execute("UPDATE conta SET saldo = saldo + $valor WHERE idconta = $idconta");
+			if($_REQUEST['pago'] == 'S'){
+				if($tipo_tramitacao == 'RECEITA'){
+					$this->execute("UPDATE conta SET saldo = saldo - $valor WHERE idconta = $idconta");
+				}else{
+					$this->execute("UPDATE conta SET saldo = saldo + $valor WHERE idconta = $idconta");
+				}
 			}
 
 			global $_user;
@@ -96,7 +99,7 @@ class tramitacao extends database {
 
 	public function obterDtDespesa(){
 		global $_user;
-		$sql = "SELECT concat(DAY(data), '/0', MONTH(data)) as dt, valor FROM tramitacao WHERE (idusuario = $_user->id_usuario AND data>=current_date) AND tipo_tramitacao like 'DESPESA'";
+		$sql = "SELECT concat(DAY(data), '/0', MONTH(data)) as dt, valor FROM tramitacao WHERE (idusuario = $_user->id_usuario AND data>=current_date) AND tipo_tramitacao like 'DESPESA' ORDER BY data ASC";
 		if ( $rs = parent::fetch_all($sql) ) {
 			foreach ( $rs as $row ) {
 				$col = array();

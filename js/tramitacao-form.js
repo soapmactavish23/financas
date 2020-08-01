@@ -1,6 +1,7 @@
 $('.modal-title').text('Nova Tramitação');
 $('#btn-excluir').hide();
 $('#btn-pagar').hide();
+var pago;
 // $('#form-conta').hide();
 $('#form-cartao').hide();
 if(data){
@@ -11,7 +12,10 @@ if(data){
 	$('input[name="data"]').val(data.data);
 	$('select[name="tipo_tramitacao"]').val(data.tipo_tramitacao);
 	$('#btn-excluir').show();
-	if(data.pago=='N') $('#btn-pagar').show();
+	pago = data.pago;
+	if(data.pago=='N') {
+		$('#btn-pagar').show();
+	}
 	if (data.fixo=='S') $('#fixo').prop('checked',true);
 }
 
@@ -121,6 +125,7 @@ $('#btn-excluir').click(function(){
 		data.push({name: 'idconta', value: $('select[name="idconta"]').val()});
 		data.push({name: 'tipo_tramitacao', value: $('select[name="tipo_tramitacao"]').val()});
 		data.push({name: 'valor', value: $('input[name="valor"]').val()});
+		data.push({name: 'pago', value: pago});
 		$.post( url + '/api.php', data, function (result) {
 			if ( result.error ) {
 				alert(result.error);

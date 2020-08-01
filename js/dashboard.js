@@ -33,7 +33,7 @@ var receita_diaria = $.ajax({
 });
 
 //Recuperar contas a receber hoje
-var receita_diaria = $.ajax({
+var despesa_diaria = $.ajax({
     url: url + '/api.php',
     type: "post",
     data: {classe: 'tramitacao', metodo: 'contarReceitasDiarias', token: token},
@@ -51,20 +51,31 @@ var receita_diaria = $.ajax({
     }
 });
 
+var detalhesVetor = [];
+
 //Ver detalhes
-$('#btn-novo').click( function () {
-	data = null;
-	loadForm();
+$('#btn-detalhes-receita').click( function () {
+    var data = [
+        titulo = "Receitas de Hoje",
+        metodo = "obterReceitasDiarias"
+    ];
+    loadForm(data);
 });
 
-$('#datatable tbody').on('click', 'tr', function () {
-	data = datatable.row( this ).data();
-	loadForm();
+$('#btn-detalhes-despesa').click(function(){
+    var data = [
+        titulo = "Despesas de Hoje",
+        metodo = "obterDespesasDiarias"
+    ];
+    loadForm(data);
 });
 
-function loadForm() {
-	$('.modal-content').load('partial/cartao-form.html', function(responseTxt,statusTxt,xhr) {
-		if ( statusTxt == 'success' ) $('.modal').modal('show');
+function loadForm(m) {
+    detalhesVetor = m;
+	$('.modal-content').load('partial/detalhes.html', function(responseTxt,statusTxt,xhr) {
+		if ( statusTxt == 'success' ){
+            $('.modal').modal('show');
+        }
 	});
 }
 

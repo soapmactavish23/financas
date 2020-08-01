@@ -8,6 +8,7 @@ var saldo_geral = $.ajax({
     data: {classe: 'conta', metodo: 'contarSaldoGeral', token: token},
     success: function(result){
         $.each(result.data, function (i, vet) {
+            var saldo = parseFloat(vet.saldo.toFixed(2));
             $('#saldo-geral').text(vet.saldo);
         });
     }
@@ -21,7 +22,8 @@ var receita_diaria = $.ajax({
     success: function(result){
         $.each(result.data, function (i, vet) {
             if(vet.valor && vet.tot_despesa){
-                $('#despesa-diaria').text(vet.valor);
+                var valor = parseFloat(vet.valor.toFixed(2));
+                $('#despesa-diaria').text(valor);
                 $('#qtd_despesa').text(vet.tot_despesa);
             }else{
                 $('#despesa-diaria').text(0);
@@ -40,7 +42,8 @@ var despesa_diaria = $.ajax({
     success: function(result){
         $.each(result.data, function (i, vet) {
             if(vet.valor && vet.tot_receita){
-                $('#receita-diaria').text(vet.valor);
+                var valor = parseFloat(vet.valor.toFixed(2));
+                $('#receita-diaria').text(valor);
                 $('#qtd_receita').text(vet.tot_receita);
             }else{
                 $('#receita-diaria').text(0);

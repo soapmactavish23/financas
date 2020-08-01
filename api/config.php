@@ -7,9 +7,9 @@ ini_set("display_errors", true);
 
 # define os parametros de conexão com o banco de dados
 define("DB_HOST", "localhost");
-define("DB_USER", "admin");
+define("DB_USER", "finan267_admin");
 define("DB_PASSWORD", "senh@d0@dmin"); //senh@d0admin
-define("DB_DB", "financa_db");
+define("DB_DB", "finan267_db");
 
 # carrega a classe MYSQLi
 require "classes/database.php";

@@ -13,6 +13,61 @@ var saldo_geral = $.ajax({
     }
 });
 
+//Recuperar contas a pagar hoje
+var receita_diaria = $.ajax({
+    url: url + '/api.php',
+    type: "post",
+    data: {classe: 'tramitacao', metodo: 'contarDespesasDiarias', token: token},
+    success: function(result){
+        $.each(result.data, function (i, vet) {
+            if(vet.valor && vet.tot_despesa){
+                $('#despesa-diaria').text(vet.valor);
+                $('#qtd_despesa').text(vet.tot_despesa);
+            }else{
+                $('#despesa-diaria').text(0);
+                $('#qtd_despesa').text(0);
+            }
+            
+        });
+    }
+});
+
+//Recuperar contas a receber hoje
+var receita_diaria = $.ajax({
+    url: url + '/api.php',
+    type: "post",
+    data: {classe: 'tramitacao', metodo: 'contarReceitasDiarias', token: token},
+    success: function(result){
+        $.each(result.data, function (i, vet) {
+            if(vet.valor && vet.tot_receita){
+                $('#receita-diaria').text(vet.valor);
+                $('#qtd_receita').text(vet.tot_receita);
+            }else{
+                $('#receita-diaria').text(0);
+                $('#qtd_receita').text(0);
+            }
+            
+        });
+    }
+});
+
+//Ver detalhes
+$('#btn-novo').click( function () {
+	data = null;
+	loadForm();
+});
+
+$('#datatable tbody').on('click', 'tr', function () {
+	data = datatable.row( this ).data();
+	loadForm();
+});
+
+function loadForm() {
+	$('.modal-content').load('partial/cartao-form.html', function(responseTxt,statusTxt,xhr) {
+		if ( statusTxt == 'success' ) $('.modal').modal('show');
+	});
+}
+
 var coresBootstrap = [
     '#d9534f',
     '#f0ad4e',

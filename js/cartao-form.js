@@ -54,10 +54,11 @@ $('form').submit(function(){
 		if ( result.error ) {
 			alert(result.error);
 		} else {
-			$('input[name="idcartao"]').val(result.idcartao);
-			$('#btn-excluir').show();
+			// $('input[name="idcartao"]').val(result.idcartao);
+			// $('#btn-excluir').show();
 			alert('Cartão ID '+result.idcartao+' gravado!');
 			datatable.ajax.reload(null, false);
+			$('.modal').modal('hide');
 		}
 	});	
 	return false;
@@ -77,9 +78,10 @@ $('#btn-excluir').click(function(){
 			} else {
 				$('input[name="idcartao"]').val(null);
 				$('#btn-excluir').hide();
-
 				alert('ID '+result.idcartao+' excluído!');
+				$('.modal').hide()
 				datatable.ajax.reload(null, false);
+				$('.modal').modal('hide');
 			}
 		});	
 	}

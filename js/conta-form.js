@@ -77,6 +77,7 @@ $('form').submit(function(){
 			$('#btn-excluir').show();
 			alert('Conta ID '+result.idconta+' gravada!');
 			datatable.ajax.reload(null, false);
+			$('.modal').modal('hide');
 		}
 	});	
 	return false;
@@ -96,9 +97,9 @@ $('#btn-excluir').click(function(){
 			} else {
 				$('input[name="idconta"]').val(null);
 				$('#btn-excluir').hide();
-
 				alert('ID '+result.idconta+' excluída!');
 				datatable.ajax.reload(null, false);
+				$('.modal').modal('hide');
 			}
 		});	
 	}

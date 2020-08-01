@@ -1,5 +1,6 @@
 $('.modal-title').text('Nova Tramitação');
 $('#btn-excluir').hide();
+$('#btn-pagar').hide();
 // $('#form-conta').hide();
 $('#form-cartao').hide();
 if(data){
@@ -10,6 +11,7 @@ if(data){
 	$('input[name="data"]').val(data.data);
 	$('select[name="tipo_tramitacao"]').val(data.tipo_tramitacao);
 	$('#btn-excluir').show();
+	if(data.pago=='N') $('#btn-pagar').show();
 	if (data.fixo=='S') $('#fixo').prop('checked',true);
 }
 
@@ -101,10 +103,9 @@ $('form').submit(function(){
 		if ( result.error ) {
 			alert(result.error);
 		} else {
-			$('input[name="idtramitacao"]').val(result.idtramitacao);
-			$('#btn-excluir').show();
 			alert('Tramitação ID '+result.idtramitacao+' gravada!');
 			datatable.ajax.reload(null, false);
+			$('.modal').modal('hide');
 		}
 	});	
 	return false;
@@ -124,12 +125,28 @@ $('#btn-excluir').click(function(){
 			if ( result.error ) {
 				alert(result.error);
 			} else {
-				$('input[name="idtramitacao"]').val(null);
-				$('#btn-excluir').hide();
-
 				alert('ID '+result.idtramitacao+' excluída!');
 				datatable.ajax.reload(null, false);
+				$('.modal').modal('hide');
 			}
 		});	
+	}
+});
+
+$('#btn-pagar').click(function(){
+	if( confirm("Tem certeza que deseja pagar a conta")){
+		var data=[];
+		data.push({name: 'classe', value: 'tramitacao'});
+		data.push({name: 'metodo', value: 'pagar'});
+		data.push({name: 'token', value: token});
+		data.push({name: 'idtramitacao', value: $('input[name="idtramitacao"]').val()});
+		$.ajax({
+			url: url + '/api.php',
+			type: 'POST',
+			data: data,
+			success: function(result){
+
+			}
+		});
 	}
 });

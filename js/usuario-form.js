@@ -44,6 +44,7 @@ $('form').submit(function(){
 			$('#btn-excluir').show();
 			alert('Usuário ID '+result.id_usuario+' gravado!');
 			datatable.ajax.reload(null, false);
+			$('.modal').modal('hide');
 		}
 	});	
 	return false;
@@ -67,6 +68,7 @@ $('#btn-excluir').click(function(){
 
 				alert('ID '+result.id_usuario+' excluído!');
 				datatable.ajax.reload(null, false);
+				$('.modal').modal('hide');
 			}
 		});	
 	}
@@ -85,6 +87,7 @@ $('#btn-renovar-senha').click(function(){
 		} else {
 			alert('Senha do usuário ID '+result.id_usuario+' renovada!');
 			datatable.ajax.reload(null, false);
+			$('.modal').modal('hide');
 		}
 	});
 });

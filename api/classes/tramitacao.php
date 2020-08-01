@@ -45,7 +45,7 @@ class tramitacao extends database {
         $this->valor = (@ $_REQUEST['valor']);
         $this->tipo_tramitacao = (@ $_REQUEST['tipo_tramitacao']);
         $this->data = (@ $_REQUEST['data']);
-		$this->descontado = 'N';
+		$this->pago = 'N';
 		
 		if($_REQUEST['fixo']){
 			$this->fixo = 'S';
@@ -59,14 +59,14 @@ class tramitacao extends database {
 		} else {
 			$this->idtramitacao = $this->insert();
 
-			if($this->data == date('Y-m-d')){
-				if($this->tipo_tramitacao == "RECEITA"){
-					$this->execute("UPDATE conta SET saldo = saldo + $this->valor WHERE idconta = $this->idconta");
-				}else{
-					$this->execute("UPDATE conta SET saldo = saldo - $this->valor WHERE idconta = $this->idconta");
-				}
-				$this->descontado = 'S';
-			}
+			// if($this->data == date('Y-m-d')){
+			// 	if($this->tipo_tramitacao == "RECEITA"){
+			// 		$this->execute("UPDATE conta SET saldo = saldo + $this->valor WHERE idconta = $this->idconta");
+			// 	}else{
+			// 		$this->execute("UPDATE conta SET saldo = saldo - $this->valor WHERE idconta = $this->idconta");
+			// 	}
+			// 	$this->pago = 'S';
+			// }
 
 		}
 		
@@ -147,9 +147,9 @@ class tramitacao extends database {
 		}
 	}
 
-	public function descontar(){
+	public function pagar(){
 		global $_user;
-		$sql = "SELECT idtramitacao, idconta, tipo_tramitacao, valor FROM tramitacao WHERE (idusuario = $_user->id_usuario AND descontado = 'N') AND (data<=current_date AND fixo = 'N')";
+		$sql = "SELECT idtramitacao, idconta, tipo_tramitacao, valor FROM tramitacao WHERE (idusuario = $_user->id_usuario AND pago = 'N') AND (data<=current_date AND fixo = 'N')";
 		if ( $rs = parent::fetch_all($sql) ) {
 			
 			$vet = array_shift($rs);
@@ -163,18 +163,18 @@ class tramitacao extends database {
 				$this->execute("UPDATE conta SET saldo = saldo - $valor WHERE idconta = $idconta");
 			}
 
-			$this->execute("UPDATE tramitacao SET descontado = 'S' WHERE idusuario = $_user->id_usuario AND data<=current_date");
+			$this->execute("UPDATE tramitacao SET pago = 'S' WHERE idusuario = $_user->id_usuario AND data<=current_date");
 	
-			return array('success' => 'Tramitações descontadas com sucesso');
+			return array('success' => 'Tramitações pagas com sucesso');
 
 		}else{
 			
-			return array('error' => 'Nenhuma Tramitação a ser Descontada');
+			return array('error' => 'Nenhuma Tramitação a ser paga');
 			
 		}
 	}
 
-	public function descontarFixas(){
+	public function pagarFixas(){
 		global $_user;
 		$sql = "SELECT idtramitacao, idconta, tipo_tramitacao, valor, data
 		FROM tramitacao 
@@ -197,9 +197,59 @@ class tramitacao extends database {
 
 			$this->execute("UPDATE tramitacao SET data = DATE_ADD(CURDATE(), INTERVAL 1 MONTH) WHERE idtramitacao = $idtramitacao");
 
-			return array('success' => 'Tramitações descontadas com sucesso');
+			return array('success' => 'Tramitações pagas com sucesso');
 		}else{
-			return array('error' => 'Nenhuma Tramitação a ser Descontada');	
+			return array('error' => 'Nenhuma Tramitação a ser paga');	
+		}
+	}
+
+	public function contarDespesasDiarias(){
+		global $_user;
+		$sql = "SELECT SUM(valor) as valor, COUNT(*) as tot_despesa
+		FROM tramitacao 
+		WHERE tipo_tramitacao like 'DESPESA' AND idusuario = $_user->id_usuario AND data = curdate() AND pago = 'N'";
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
+		}
+	}
+
+	public function contarReceitasDiarias(){
+		global $_user;
+		$sql = "SELECT SUM(valor) as valor, COUNT(*) as tot_receita
+		FROM tramitacao 
+		WHERE tipo_tramitacao like 'RECEITA' AND idusuario = $_user->id_usuario AND data = curdate() AND pago = 'N'
+		";
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
+		}
+	}
+
+	public function obterDespesasDiarias(){
+		global $_user;
+		$sql = "SELECT idtramitacao, categoria, valor, data FROM tramitacao WHERE idusuario = $_user->idusuario AND data = curdate() AND pago = 'N'";
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
 		}
 	}
 

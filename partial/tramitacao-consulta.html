@@ -1,0 +1,44 @@
+<div data-aos="zoom-in">
+    <br />
+    <div class="row">
+        <div class="col-sm-8">
+            <h4>Consultar Tramitações</h4>
+        </div>
+        <div class="col-sm-4">
+            <select class='form-control selectpicker' id='periodo' name='periodo' data-live-search='true'></select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-sm-6">
+            <div class='card shadow bg-success text-white text-center'>
+                <h2 class='card-title'>R$ <span id='receita-mensal'>0</span></h2>
+                <div class='card-text'>Todal de Receitas no Mês: <b><span id="qtd_receita">0</span></b><br></div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class='card shadow bg-danger text-white text-center'>
+                <h2 class='card-title'>R$ <span id='despesa-mensal'>0</span></h2>
+                <div class='card-text'>Todal de Despesas no Mês: <b><span id="qtd_despesa">0</span></b><br></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <table id="datatable" class="table table-striped" style="width:100%">
+        <thead class='thead-dark'>
+            <tr>
+                <th>Descricao</th>
+                <th>Categoria</th>
+                <th>Tipo de Tramitação</th>
+                <th>Valor</th>
+                <th>Situação</th>
+                <th>Conta</th>
+                <th>Data</th>
+                <th class='dt-head-right'>Atualizado</th>
+            </tr>
+        </thead>
+    </table>
+    <hr/>
+</div>
+
+<script src='js/tramitacao-consultar.js'></script>

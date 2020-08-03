@@ -28,6 +28,7 @@ var datatable = $('#datatable').DataTable({
 		{ data: "dt_update", className: "details-control dt-body-right", render: function (datetime) { return datetime_format(datetime, 'd/m/y h:i') } }
 	],
 	responsive: true,
+	"order": [],
 	language: {
 		url: "lib/datatables/Portuguese-Brasil.lang"
 	}

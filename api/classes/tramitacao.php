@@ -20,6 +20,25 @@ class tramitacao extends database
 		}
 	}
 
+	public function obterTodosPorMes(){
+		global $_user;
+		$sql = "SELECT nome_conta, descricao, categoria, tipo_tramitacao, valor, pago, data, t.dt_update
+		FROM tramitacao t
+		INNER JOIN conta c
+		ON t.idconta = c.idconta
+		WHERE t.idusuario = $_user->id_usuario AND MONTH(data) = ".$_REQUEST['periodo'];
+		if ($rs = parent::fetch_all($sql)) {
+			foreach ($rs as $row) {
+				$col = array();
+				foreach ($row as $k => $v) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array('data' => $rows);
+		}
+	}
+
 	public function obterCategoria()
 	{
 		$sql = "SELECT DISTINCT categoria FROM tramitacao";
@@ -273,4 +292,37 @@ class tramitacao extends database
 			return array('data' => $rows);
 		}
 	}
+
+	public function contarDespesasPorMes(){
+		global $_user;
+		$sql = "SELECT SUM(valor) AS valor_despesa, COUNT(*) tot_despesa FROM tramitacao 
+		WHERE MONTH(data) = ".$_REQUEST['periodo']." AND tipo_tramitacao like 'DESPESA' AND idusuario = $_user->id_usuario";
+		if ($rs = parent::fetch_all($sql)) {
+			foreach ($rs as $row) {
+				$col = array();
+				foreach ($row as $k => $v) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array('data' => $rows);
+		}
+	}
+
+	public function contarReceitasPorMes(){
+		global $_user;
+		$sql = "SELECT SUM(valor) AS valor_receita, COUNT(*) tot_receita FROM tramitacao 
+		WHERE MONTH(data) = ".$_REQUEST['periodo']." AND tipo_tramitacao like 'RECEITA' AND idusuario = $_user->id_usuario";
+		if ($rs = parent::fetch_all($sql)) {
+			foreach ($rs as $row) {
+				$col = array();
+				foreach ($row as $k => $v) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array('data' => $rows);
+		}
+	}
+
 }

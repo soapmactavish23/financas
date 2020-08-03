@@ -1,21 +1,19 @@
 $('.modal-title').text('Nova Tramitação');
 $('#btn-excluir').hide();
 $('#btn-pagar').hide();
-var pago;
-// $('#form-conta').hide();
 $('#form-cartao').hide();
+$('input[name="pago"]').val('N');
 if(data){
     $('.modal-title').text('Tramitação #' + data.idtramitacao);
-    $('input[name="idtramitacao"]').val(data.idtramitacao);
+	$('input[name="idtramitacao"]').val(data.idtramitacao);
+	$('input[name="pago"]').val(data.pago);
     $('input[name="descricao"]').val(data.descricao);
     $('input[name="valor"]').val(data.valor);
 	$('input[name="data"]').val(data.data);
 	$('select[name="tipo_tramitacao"]').val(data.tipo_tramitacao);
 	$('#btn-excluir').show();
-	pago = data.pago;
-	if(data.pago=='N') {
-		$('#btn-pagar').show();
-	}
+	if(data.pago=='N') $('#btn-pagar').show();
+	if(data.tipo_tramitacao == 'RECEITA') $('#btn-pagar').text("RECEBER")
 	if (data.fixo=='S') $('#fixo').prop('checked',true);
 }
 
@@ -125,7 +123,7 @@ $('#btn-excluir').click(function(){
 		data.push({name: 'idconta', value: $('select[name="idconta"]').val()});
 		data.push({name: 'tipo_tramitacao', value: $('select[name="tipo_tramitacao"]').val()});
 		data.push({name: 'valor', value: $('input[name="valor"]').val()});
-		data.push({name: 'pago', value: pago});
+		data.push({name: 'pago', value: $('input[name="pago"]').val()});
 		$.post( url + '/api.php', data, function (result) {
 			if ( result.error ) {
 				alert(result.error);
@@ -139,18 +137,24 @@ $('#btn-excluir').click(function(){
 });
 
 $('#btn-pagar').click(function(){
-	if( confirm("Tem certeza que deseja pagar a conta")){
+	if( confirm("Tem certeza que deseja tramitar essa conta")){
 		var data=[];
 		data.push({name: 'classe', value: 'tramitacao'});
 		data.push({name: 'metodo', value: 'pagar'});
 		data.push({name: 'token', value: token});
 		data.push({name: 'idtramitacao', value: $('input[name="idtramitacao"]').val()});
+		data.push({name: 'idconta', value: $('select[name="idconta"]').val()});
+		data.push({name: 'tipo_tramitacao', value: $('select[name="tipo_tramitacao"]').val()});
+		data.push({name: 'valor', value: $('input[name="valor"]').val()});
 		$.ajax({
 			url: url + '/api.php',
 			type: 'POST',
 			data: data,
 			success: function(result){
-
+				console.log(result);
+				datatable.ajax.reload(null, false);
+				alert(result.success);
+				$('.modal').modal('hide');
 			}
 		});
 	}

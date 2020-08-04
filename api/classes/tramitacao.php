@@ -39,6 +39,26 @@ class tramitacao extends database
 		}
 	}
 
+	public function obterTodasPendentes(){
+		global $_user;
+		$sql = "SELECT idtramitacao, t.idconta,nome_conta, descricao, categoria, tipo_tramitacao, valor, pago, data, t.dt_update
+		FROM tramitacao t
+		INNER JOIN conta c
+		ON t.idconta = c.idconta
+		WHERE t.idusuario = $_user->id_usuario AND pago = 'N'
+		ORDER BY data ASC";
+		if ($rs = parent::fetch_all($sql)) {
+			foreach ($rs as $row) {
+				$col = array();
+				foreach ($row as $k => $v) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array('data' => $rows);
+		}
+	}
+
 	public function obterCategoria()
 	{
 		$sql = "SELECT DISTINCT categoria FROM tramitacao";

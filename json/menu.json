@@ -16,6 +16,7 @@
 		{ "label": "Tramitação", 
 			"subitems": [
 			  { "id": "tramitacao", "label": "Cadastrar" },
+			  { "id": "tramitacao-pendente", "label": "Pendentes" },
 			  { "id": "tramitacao-consulta", "label": "Consultar" }
 			]
 		},

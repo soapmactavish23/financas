@@ -35,3 +35,9 @@ Finanças da Leida é um sistema de controle financeiro que controla o saldo ger
 
 ### Tramitações Pendentes
 ![](prints/tramitacao-pendente.PNG)
+
+### Usuários
+![](prints/usuario.PNG)
+
+### Cadastro de Usuários
+![](prints/usuario-form.PNG)

@@ -7,7 +7,7 @@ Finanças da Leida é um sistema de controle financeiro que controla o saldo ger
 [Finanças da Leida](http://financasleidanogueira.com)
 
 ### Video Demonstrativo
-[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://www.youtube.com/watch?v=bWG2DwJvXS8)
+[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://www.youtube.com/watch?v=2eXS-M4B-kc)
 
 ### Login
 ![](prints/login.PNG)

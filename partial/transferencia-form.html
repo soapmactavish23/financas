@@ -1,0 +1,27 @@
+<form role="form">
+    <div class="modal-header">
+        <h4 class='modal-title'></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="modal-body">
+        <input type='hidden' name='idtransferencia'>
+        <div class="form-group" id="form-conta">
+            <label for='idconta'>Conta que irá Trênsferir</label>
+            <select class='form-control selectpicker' id='idconta' name='idconta' data-live-search='true' required></select>
+        </div>
+        <div class="form-group" id="form-cartao">
+            <label for='idconta_recebe'>Conta que irá Receber</label>
+            <select class='form-control selectpicker' id='idconta_recebe' name='idconta_recebe' data-live-search='true' required></select>
+        </div>
+        <div class="form-group">
+            <label for='valor'>Valor</label>
+            <input class='form-control' type='number' id='valor' name='valor' placeholder='Digite o valor' step="0.01" required>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class='btn btn-success' type='submit'>Salvar</button>
+        <button class='btn btn-danger' type='button' id='btn-excluir'>Excluir</button>
+    </div>
+</form>
+
+<script src='js/transferencia-form.js'></script>

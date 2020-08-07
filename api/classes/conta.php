@@ -34,6 +34,37 @@ class conta extends database {
 		}
 	}
 
+	public function obterContaDisponivel(){
+		global $_user;
+		$sql = "SELECT idconta, concat(instituicao, ' / ' ,nome_conta) as conta FROM conta WHERE idusuario = $_user->id_usuario";
+	
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
+		}
+	}
+
+	public function obterSaldo(){
+		global $_user;
+		$sql = "SELECT saldo FROM conta WHERE idconta = ".$_REQUEST['idconta'];
+		if ( $rs = parent::fetch_all($sql) ) {
+			foreach ( $rs as $row ) {
+				$col = array();
+				foreach ( $row as $k=>$v ) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array( 'data' => $rows );
+		}
+	}
+
     public function obterInstituicoes() {
 		$sql = "SELECT DISTINCT instituicao FROM conta";
 	

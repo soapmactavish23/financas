@@ -2,39 +2,39 @@
 $('#nome-usuario').text("Olá " + user.nome);
 
 //Recuperar o saldo geral
-var saldo_geral = $.ajax({
-    url: url + '/api.php',
-    type: "POST",
-    data: {classe: 'conta', metodo: 'contarSaldoGeral', token: token},
-    success: function(result){
-        $.each(result.data, function (i, vet) {
-            var saldo = vet.saldo;
-            if(saldo){
-                $('#saldo-geral').text(parseFloat(saldo).toFixed(2));
-            }else{
-                $('#saldo-geral').text(0);
-            }
-            
-        });
-    }
-});
+// var saldo_geral = $.ajax({
+//     url: url + '/api.php',
+//     type: "POST",
+//     data: {classe: 'conta', metodo: 'contarSaldoGeral', token: token},
+//     success: function(result){
+//         $.each(result.data, function (i, vet) {
+//             var saldo = vet.saldo;
+//             if(saldo){
+//                 $('#saldo-geral').text(parseFloat(saldo).toFixed(2));
+//             }else{
+//                 $('#saldo-geral').text(0);
+//             }
+
+//         });
+//     }
+// });
 
 //Recuperar contas a pagar hoje
 var receita_diaria = $.ajax({
     url: url + '/api.php',
     type: "post",
-    data: {classe: 'tramitacao', metodo: 'contarDespesasDiarias', token: token},
-    success: function(result){
-        $.each(result.data, function (i, vet) {
-            if(vet.valor && vet.tot_despesa){
+    data: { classe: 'tramitacao', metodo: 'contarDespesasDiarias', token: token },
+    success: function(result) {
+        $.each(result.data, function(i, vet) {
+            if (vet.valor && vet.tot_despesa) {
                 var valor = vet.valor;
                 $('#despesa-diaria').text(parseFloat(valor).toFixed(2));
                 $('#qtd_despesa').text(vet.tot_despesa);
-            }else{
+            } else {
                 $('#despesa-diaria').text(0);
                 $('#qtd_despesa').text(0);
             }
-            
+
         });
     }
 });
@@ -43,18 +43,18 @@ var receita_diaria = $.ajax({
 var despesa_diaria = $.ajax({
     url: url + '/api.php',
     type: "post",
-    data: {classe: 'tramitacao', metodo: 'contarReceitasDiarias', token: token},
-    success: function(result){
-        $.each(result.data, function (i, vet) {
-            if(vet.valor && vet.tot_receita){
+    data: { classe: 'tramitacao', metodo: 'contarReceitasDiarias', token: token },
+    success: function(result) {
+        $.each(result.data, function(i, vet) {
+            if (vet.valor && vet.tot_receita) {
                 var valor = vet.valor;
                 $('#receita-diaria').text(parseFloat(valor).toFixed(2));
                 $('#qtd_receita').text(vet.tot_receita);
-            }else{
+            } else {
                 $('#receita-diaria').text(0);
                 $('#qtd_receita').text(0);
             }
-            
+
         });
     }
 });
@@ -62,7 +62,7 @@ var despesa_diaria = $.ajax({
 var detalhesVetor = [];
 
 //Ver detalhes
-$('#btn-detalhes-receita').click( function () {
+$('#btn-detalhes-receita').click(function() {
     var data = [
         titulo = "Receitas de Hoje",
         metodo = "obterReceitasDiarias"
@@ -70,7 +70,7 @@ $('#btn-detalhes-receita').click( function () {
     loadForm(data);
 });
 
-$('#btn-detalhes-despesa').click(function(){
+$('#btn-detalhes-despesa').click(function() {
     var data = [
         titulo = "Despesas de Hoje",
         metodo = "obterDespesasDiarias"
@@ -80,11 +80,11 @@ $('#btn-detalhes-despesa').click(function(){
 
 function loadForm(m) {
     detalhesVetor = m;
-	$('.modal-content').load('partial/detalhes.html', function(responseTxt,statusTxt,xhr) {
-		if ( statusTxt == 'success' ){
+    $('.modal-content').load('partial/detalhes.html', function(responseTxt, statusTxt, xhr) {
+        if (statusTxt == 'success') {
             $('.modal').modal('show');
         }
-	});
+    });
 }
 
 var coresBootstrap = [
@@ -107,7 +107,7 @@ var coresBootstrap = [
 ];
 
 //Gráfico de contas
-var chartContas = new Chart($('#painel-contas'),{
+var chartContas = new Chart($('#painel-contas'), {
     type: 'doughnut',
     data: {
         datasets: [{
@@ -132,20 +132,20 @@ var chartContas = new Chart($('#painel-contas'),{
             animateRotate: true
         }
     }
-});		
+});
 
 var graficoContas = $.ajax({
     url: url + '/api.php',
     type: 'POST',
-    data: {classe: 'conta', metodo: 'contarContas', token: token},
-    success: function(result){
-        if(result.error){
+    data: { classe: 'conta', metodo: 'contarContas', token: token },
+    success: function(result) {
+        if (result.error) {
             console.log(result.error);
-        }else{
-            if(result.data){
+        } else {
+            if (result.data) {
                 chartContas.data.labels = [];
                 chartContas.data.datasets[0].data = [];
-                $.each(result.data, function(i, vet){
+                $.each(result.data, function(i, vet) {
                     chartContas.data.labels.push(vet.instituicao);
                     chartContas.data.datasets[0].data.push(parseInt(vet.saldo));
                 });
@@ -156,7 +156,7 @@ var graficoContas = $.ajax({
 });
 
 //Gráfico de painel-dt-conta
-var chartDtDespesas = new Chart($('#painel-dt-conta'),{
+var chartDtDespesas = new Chart($('#painel-dt-conta'), {
     type: 'bar',
     data: {
         labels: [],
@@ -184,22 +184,22 @@ var chartDtDespesas = new Chart($('#painel-dt-conta'),{
             animateRotate: true
         }
     }
-});		
+});
 
 var graficoDtDespesa = $.ajax({
     url: url + '/api.php',
     type: 'POST',
-    data: {classe: 'tramitacao', metodo: 'obterDtDespesa', token: token},
-    success: function(result){
-        if(result.error){
+    data: { classe: 'tramitacao', metodo: 'obterDtDespesa', token: token },
+    success: function(result) {
+        if (result.error) {
             console.log(result.error);
-        }else{
-            if(result.data){
+        } else {
+            if (result.data) {
                 chartDtDespesas.data.labels = [];
                 chartDtDespesas.data.datasets[0].data = [];
-                $.each(result.data, function(i, vet){
+                $.each(result.data, function(i, vet) {
                     chartDtDespesas.data.labels.push(vet.dt);
-                    chartDtDespesas.data.datasets[0].data.push( parseInt(vet.valor) );
+                    chartDtDespesas.data.datasets[0].data.push(parseInt(vet.valor));
                 });
                 chartDtDespesas.update();
             }
@@ -208,7 +208,7 @@ var graficoDtDespesa = $.ajax({
 });
 
 //Gráfico de despesas
-var chartDespesas = new Chart( $('#painel-despesa'), {
+var chartDespesas = new Chart($('#painel-despesa'), {
     type: 'horizontalBar',
     data: {
         labels: [],
@@ -240,7 +240,7 @@ var chartDespesas = new Chart( $('#painel-despesa'), {
         scales: {
             xAxes: [{
                 display: true,
-                ticks: { 
+                ticks: {
                     beginAtZero: true
                 }
             }],
@@ -258,11 +258,11 @@ var chartDespesas = new Chart( $('#painel-despesa'), {
 var graficoDespesa = $.ajax({
     url: url + '/api.php',
     type: 'POST',
-    data: {classe: 'tramitacao', metodo: 'contarDespesas', token: token},
-    success: function(result){
+    data: { classe: 'tramitacao', metodo: 'contarDespesas', token: token },
+    success: function(result) {
         chartDespesas.data.labels = [];
         chartDespesas.data.datasets[0].data = [];
-        $.each(result.data, function(i, vet){
+        $.each(result.data, function(i, vet) {
             chartDespesas.data.labels.push(vet.categoria);
             chartDespesas.data.datasets[0].data.push(parseInt(vet.valor));
 
@@ -273,7 +273,7 @@ var graficoDespesa = $.ajax({
 
 
 //Gráfico de Receita
-var chartReceita = new Chart( $('#painel-receita'), {
+var chartReceita = new Chart($('#painel-receita'), {
     type: 'horizontalBar',
     data: {
         labels: [],
@@ -305,7 +305,7 @@ var chartReceita = new Chart( $('#painel-receita'), {
         scales: {
             xAxes: [{
                 display: true,
-                ticks: { 
+                ticks: {
                     beginAtZero: true
                 }
             }],
@@ -323,11 +323,11 @@ var chartReceita = new Chart( $('#painel-receita'), {
 var graficoReceita = $.ajax({
     url: url + '/api.php',
     type: 'POST',
-    data: {classe: 'tramitacao', metodo: 'contarReceitas', token: token},
-    success: function(result){
+    data: { classe: 'tramitacao', metodo: 'contarReceitas', token: token },
+    success: function(result) {
         chartReceita.data.labels = [];
         chartReceita.data.datasets[0].data = [];
-        $.each(result.data, function(i, vet){
+        $.each(result.data, function(i, vet) {
             chartReceita.data.labels.push(vet.categoria);
             chartReceita.data.datasets[0].data.push(parseInt(vet.valor));
         });
@@ -335,7 +335,6 @@ var graficoReceita = $.ajax({
     }
 });
 
-setInterval(saldo_geral, 120000);
 setInterval(graficoContas, 120000);
 setInterval(graficoDtDespesa, 120000);
 setInterval(graficoDespesa, 120000);

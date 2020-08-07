@@ -1,30 +1,39 @@
-{ 
-	"title": "Finanças da Leida",
-	"items": [
-		{ "label": "Conta", 
-			"subitems": [
-			  { "id": "conta", "label": "Cadastrar" },
-			  { "id": "conta-consulta", "label": "Consultar" , "visible": false}
-			]
-		},
-		{ "label": "Cartão de Crédito", 
-			"subitems": [
-			  { "id": "cartao", "label": "Cadastrar" },
-			  { "id": "cartao-consulta", "label": "Consultar" , "visible": false}
-			]
-		},
-		{ "label": "Tramitação", 
-			"subitems": [
-			  { "id": "tramitacao", "label": "Cadastrar" },
-			  { "id": "tramitacao-pendente", "label": "Pendentes" },
-			  { "id": "tramitacao-consulta", "label": "Consultar" }
-			]
-		},
-		{ "label": "Usuário", 
-		  "subitems": [
-			{ "id": "usuario", "label": "Cadastrar usuário" },
-			{ "id": "mudasenha", "label": "Mudar senha do usuário", "visible" : false }
-			]
-		}
-	]
+{
+    "title": "Finanças da Leida",
+    "items": [{
+            "label": "Conta",
+            "subitems": [
+                { "id": "conta", "label": "Cadastrar" },
+                { "id": "conta-consulta", "label": "Consultar", "visible": false }
+            ]
+        },
+        {
+            "label": "Cartão de Crédito",
+            "subitems": [
+                { "id": "cartao", "label": "Cadastrar" },
+                { "id": "cartao-consulta", "label": "Consultar", "visible": false }
+            ]
+        },
+        {
+            "label": "Tramitação",
+            "subitems": [
+                { "id": "tramitacao", "label": "Cadastrar" },
+                { "id": "tramitacao-pendente", "label": "Pendentes" },
+                { "id": "tramitacao-consulta", "label": "Consultar" }
+            ]
+        },
+        {
+            "label": "Transferência",
+            "subitems": [
+                { "id": "transferencia", "label": "Cadastrar" }
+            ]
+        },
+        {
+            "label": "Usuário",
+            "subitems": [
+                { "id": "usuario", "label": "Cadastrar usuário" },
+                { "id": "mudasenha", "label": "Mudar senha do usuário", "visible": false }
+            ]
+        }
+    ]
 }

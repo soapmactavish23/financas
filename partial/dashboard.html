@@ -1,13 +1,18 @@
 <h3 id="nome-usuario" class="text-center"></h3>
 <hr>
+
 <div class="row">
-    <div class="col-sm-6">
-        <div class='card shadow bg-success text-white text-center'>
-            <h2 class='card-title'>R$ <span id='receita-diaria'>0</span></h2>
-            <div class='card-text'>Todal de Contas para receber hoje: <b><span id="qtd_receita">0</span></b><br></div>
-            <button type="button" class="btn btn-success" id="btn-detalhes-receita">Ver Detalhes</button>
-        </div>
+    <div class="col-sm-2">
+        <label>Selecione um Mês: </label>
     </div>
+    <div class="col-sm-10">
+        <select class="form-control selectpicker" id="periodo" name="periodo" >
+		</select>
+    </div>
+</div>
+
+<hr>
+<div class="row">
     <!-- <div class="col-sm-4">
 		<div class='card shadow bg-primary text-white text-center'>
 			<h2 class='card-title'>R$ <span id='saldo-geral'>0</span></h2>
@@ -15,6 +20,13 @@
 			<button type="button" class="btn btn-primary">Ver Detalhes</button>
 		</div>
 	</div> -->
+    <div class="col-sm-6">
+        <div class='card shadow bg-success text-white text-center'>
+            <h2 class='card-title'>R$ <span id='receita-diaria'>0</span></h2>
+            <div class='card-text'>Todal de Contas para receber hoje: <b><span id="qtd_receita">0</span></b><br></div>
+            <button type="button" class="btn btn-success" id="btn-detalhes-receita">Ver Detalhes</button>
+        </div>
+    </div>
     <div class="col-sm-6">
         <div class='card shadow bg-danger text-white text-center'>
             <h2 class='card-title'>R$ <span id='despesa-diaria'>0</span></h2>
@@ -39,6 +51,11 @@
         </div>
         <div class="col-sm-6 card shadow h-40">
             <canvas id="painel-despesa"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 card shadow h-40">
+            <canvas id="painel-estimativa"></canvas>    
         </div>
     </div>
 </div>

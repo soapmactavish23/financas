@@ -1,31 +1,38 @@
 //Apresentar o nome de usuário
 $('#nome-usuario').text("Olá " + user.nome);
 
-//Recuperar o saldo geral
-// var saldo_geral = $.ajax({
-//     url: url + '/api.php',
-//     type: "POST",
-//     data: {classe: 'conta', metodo: 'contarSaldoGeral', token: token},
-//     success: function(result){
-//         $.each(result.data, function (i, vet) {
-//             var saldo = vet.saldo;
-//             if(saldo){
-//                 $('#saldo-geral').text(parseFloat(saldo).toFixed(2));
-//             }else{
-//                 $('#saldo-geral').text(0);
-//             }
-
-//         });
-//     }
-// });
+//Select Picker para periodo
+var selectPeriodo = $('select[name="periodo"]');
+var meses = {
+    nome: [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro"
+    ],
+    digito: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+}
+for (var i = 0; i < meses.nome.length; i++) {
+    selectPeriodo.append($('<option>', { value: meses.digito[i], text: meses.nome[i] }));
+}
+selectPeriodo.val(null);
+selectPeriodo.selectpicker();
 
 //Recuperar contas a pagar hoje
 var receita_diaria = $.ajax({
     url: url + '/api.php',
     type: "post",
     data: { classe: 'tramitacao', metodo: 'contarDespesasDiarias', token: token },
-    success: function(result) {
-        $.each(result.data, function(i, vet) {
+    success: function (result) {
+        $.each(result.data, function (i, vet) {
             if (vet.valor && vet.tot_despesa) {
                 var valor = vet.valor;
                 $('#despesa-diaria').text(parseFloat(valor).toFixed(2));
@@ -44,8 +51,8 @@ var despesa_diaria = $.ajax({
     url: url + '/api.php',
     type: "post",
     data: { classe: 'tramitacao', metodo: 'contarReceitasDiarias', token: token },
-    success: function(result) {
-        $.each(result.data, function(i, vet) {
+    success: function (result) {
+        $.each(result.data, function (i, vet) {
             if (vet.valor && vet.tot_receita) {
                 var valor = vet.valor;
                 $('#receita-diaria').text(parseFloat(valor).toFixed(2));
@@ -62,7 +69,7 @@ var despesa_diaria = $.ajax({
 var detalhesVetor = [];
 
 //Ver detalhes
-$('#btn-detalhes-receita').click(function() {
+$('#btn-detalhes-receita').click(function () {
     var data = [
         titulo = "Receitas de Hoje",
         metodo = "obterReceitasDiarias"
@@ -70,7 +77,7 @@ $('#btn-detalhes-receita').click(function() {
     loadForm(data);
 });
 
-$('#btn-detalhes-despesa').click(function() {
+$('#btn-detalhes-despesa').click(function () {
     var data = [
         titulo = "Despesas de Hoje",
         metodo = "obterDespesasDiarias"
@@ -80,7 +87,7 @@ $('#btn-detalhes-despesa').click(function() {
 
 function loadForm(m) {
     detalhesVetor = m;
-    $('.modal-content').load('partial/detalhes.html', function(responseTxt, statusTxt, xhr) {
+    $('.modal-content').load('partial/detalhes.html', function (responseTxt, statusTxt, xhr) {
         if (statusTxt == 'success') {
             $('.modal').modal('show');
         }
@@ -138,14 +145,14 @@ var graficoContas = $.ajax({
     url: url + '/api.php',
     type: 'POST',
     data: { classe: 'conta', metodo: 'contarContas', token: token },
-    success: function(result) {
+    success: function (result) {
         if (result.error) {
             console.log(result.error);
         } else {
             if (result.data) {
                 chartContas.data.labels = [];
                 chartContas.data.datasets[0].data = [];
-                $.each(result.data, function(i, vet) {
+                $.each(result.data, function (i, vet) {
                     chartContas.data.labels.push(vet.instituicao);
                     chartContas.data.datasets[0].data.push(parseInt(vet.saldo));
                 });
@@ -171,7 +178,7 @@ var chartDtDespesas = new Chart($('#painel-dt-conta'), {
     options: {
         responsive: true,
         legend: {
-            position: 'bottom',
+            display: false
         },
         title: {
             display: true,
@@ -190,14 +197,14 @@ var graficoDtDespesa = $.ajax({
     url: url + '/api.php',
     type: 'POST',
     data: { classe: 'tramitacao', metodo: 'obterDtDespesa', token: token },
-    success: function(result) {
+    success: function (result) {
         if (result.error) {
             console.log(result.error);
         } else {
             if (result.data) {
                 chartDtDespesas.data.labels = [];
                 chartDtDespesas.data.datasets[0].data = [];
-                $.each(result.data, function(i, vet) {
+                $.each(result.data, function (i, vet) {
                     chartDtDespesas.data.labels.push(vet.dt);
                     chartDtDespesas.data.datasets[0].data.push(parseInt(vet.valor));
                 });
@@ -255,22 +262,6 @@ var chartDespesas = new Chart($('#painel-despesa'), {
     }
 });
 
-var graficoDespesa = $.ajax({
-    url: url + '/api.php',
-    type: 'POST',
-    data: { classe: 'tramitacao', metodo: 'contarDespesas', token: token },
-    success: function(result) {
-        chartDespesas.data.labels = [];
-        chartDespesas.data.datasets[0].data = [];
-        $.each(result.data, function(i, vet) {
-            chartDespesas.data.labels.push(vet.categoria);
-            chartDespesas.data.datasets[0].data.push(parseInt(vet.valor));
-
-        });
-        chartDespesas.update();
-    }
-});
-
 
 //Gráfico de Receita
 var chartReceita = new Chart($('#painel-receita'), {
@@ -320,22 +311,88 @@ var chartReceita = new Chart($('#painel-receita'), {
     }
 });
 
-var graficoReceita = $.ajax({
-    url: url + '/api.php',
-    type: 'POST',
-    data: { classe: 'tramitacao', metodo: 'contarReceitas', token: token },
-    success: function(result) {
-        chartReceita.data.labels = [];
-        chartReceita.data.datasets[0].data = [];
-        $.each(result.data, function(i, vet) {
-            chartReceita.data.labels.push(vet.categoria);
-            chartReceita.data.datasets[0].data.push(parseInt(vet.valor));
-        });
-        chartReceita.update();
+//Gráfico de contas
+var chartEstimativa = new Chart($('#painel-estimativa'), {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [],
+            backgroundColor: ['#d9534f', '#5cb85c']
+        }],
+        labels: []
+    },
+    options: {
+        // responsive: true,
+        legend: {
+            position: 'bottom',
+        },
+        title: {
+            display: true,
+            text: 'Quantificação de Estimativas',
+            fontSize: 16,
+            fontFamily: 'Arial'
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
     }
 });
 
-setInterval(graficoContas, 120000);
-setInterval(graficoDtDespesa, 120000);
-setInterval(graficoDespesa, 120000);
-setInterval(graficoReceita, 120000);
+$(selectPeriodo).change(function () {
+
+    var graficoReceita = $.ajax({
+        url: url + '/api.php',
+        type: 'POST',
+        data: { classe: 'tramitacao', metodo: 'contarReceitas', token: token, mes: selectPeriodo.val() },
+        success: function (result) {
+            chartReceita.data.labels = [];
+            chartReceita.data.datasets[0].data = [];
+            $.each(result.data, function (i, vet) {
+                chartReceita.data.labels.push(vet.categoria);
+                chartReceita.data.datasets[0].data.push(parseInt(vet.valor));
+            });
+            chartReceita.update();
+        }
+    });
+
+    var graficoDespesa = $.ajax({
+        url: url + '/api.php',
+        type: 'POST',
+        data: { classe: 'tramitacao', metodo: 'contarDespesas', token: token, mes: selectPeriodo.val() },
+        success: function (result) {
+            chartDespesas.data.labels = [];
+            chartDespesas.data.datasets[0].data = [];
+            $.each(result.data, function (i, vet) {
+                chartDespesas.data.labels.push(vet.categoria);
+                chartDespesas.data.datasets[0].data.push(parseInt(vet.valor));
+
+            });
+            chartDespesas.update();
+        }
+    });
+
+    var graficoEstimativa = $.ajax({
+        url: url + '/api.php',
+        type: 'POST',
+        data: { classe: 'tramitacao', metodo: 'contarEstimativas', token: token, mes: selectPeriodo.val() },
+        success: function (result) {
+            if (result.error) {
+                console.log(result.error);
+            } else {
+                if (result.data) {
+                    chartEstimativa.data.labels = [];
+                    chartEstimativa.data.datasets[0].data = [];
+                    $.each(result.data, function (i, vet) {
+                        chartEstimativa.data.labels.push(vet.tipo_tramitacao);
+                        chartEstimativa.data.datasets[0].data.push(parseInt(vet.valor));
+                    });
+                    chartEstimativa.update();
+                }
+            }
+        }
+    });
+
+});
+
+selectPeriodo.change();

@@ -20,13 +20,14 @@ class tramitacao extends database
 		}
 	}
 
-	public function obterTodosPorMes(){
+	public function obterTodosPorMes()
+	{
 		global $_user;
 		$sql = "SELECT nome_conta, descricao, categoria, tipo_tramitacao, valor, pago, data, t.dt_update
 		FROM tramitacao t
 		INNER JOIN conta c
 		ON t.idconta = c.idconta
-		WHERE t.idusuario = $_user->id_usuario AND MONTH(data) = ".$_REQUEST['periodo'];
+		WHERE t.idusuario = $_user->id_usuario AND MONTH(data) = " . $_REQUEST['periodo'];
 		if ($rs = parent::fetch_all($sql)) {
 			foreach ($rs as $row) {
 				$col = array();
@@ -39,7 +40,8 @@ class tramitacao extends database
 		}
 	}
 
-	public function obterTodasPendentes(){
+	public function obterTodasPendentes()
+	{
 		global $_user;
 		$sql = "SELECT idtramitacao, t.idconta,nome_conta, descricao, categoria, tipo_tramitacao, valor, pago, data, t.dt_update
 		FROM tramitacao t
@@ -99,7 +101,7 @@ class tramitacao extends database
 		if ($this->idtramitacao) {
 			$this->dt_update = date('Y-m-d H:i:s');
 			$this->update();
-			
+
 			$sql_update = "";
 
 			$this->execute($sql_update);
@@ -156,8 +158,11 @@ class tramitacao extends database
 		global $_user;
 		$sql = "SELECT categoria, sum(valor) as valor 
 		FROM tramitacao
-		WHERE idusuario = $_user->id_usuario AND tipo_tramitacao like 'DESPESA' 
-		GROUP BY categoria";
+		WHERE idusuario = $_user->id_usuario AND tipo_tramitacao like 'DESPESA' ";
+
+		if (@$_REQUEST['mes']) $sql .= "AND MONTH(data) = " . $_REQUEST['mes'];
+
+		$sql .= " GROUP BY categoria";
 
 		if ($rs = parent::fetch_all($sql)) {
 			foreach ($rs as $row) {
@@ -176,8 +181,11 @@ class tramitacao extends database
 		global $_user;
 		$sql = "SELECT categoria, sum(valor) as valor 
 		FROM tramitacao
-		WHERE idusuario = $_user->id_usuario AND tipo_tramitacao like 'RECEITA' 
-		GROUP BY categoria";
+		WHERE idusuario = $_user->id_usuario AND tipo_tramitacao like 'RECEITA'";
+
+		if ($_REQUEST['mes']) $sql .= "AND MONTH(data) = " . $_REQUEST['mes'];
+
+		$sql .= " GROUP BY categoria";
 
 		if ($rs = parent::fetch_all($sql)) {
 			foreach ($rs as $row) {
@@ -313,10 +321,11 @@ class tramitacao extends database
 		}
 	}
 
-	public function contarDespesasPorMes(){
+	public function contarDespesasPorMes()
+	{
 		global $_user;
 		$sql = "SELECT SUM(valor) AS valor_despesa, COUNT(*) tot_despesa FROM tramitacao 
-		WHERE MONTH(data) = ".$_REQUEST['periodo']." AND tipo_tramitacao like 'DESPESA' AND idusuario = $_user->id_usuario";
+		WHERE MONTH(data) = " . $_REQUEST['periodo'] . " AND tipo_tramitacao like 'DESPESA' AND idusuario = $_user->id_usuario";
 		if ($rs = parent::fetch_all($sql)) {
 			foreach ($rs as $row) {
 				$col = array();
@@ -329,10 +338,11 @@ class tramitacao extends database
 		}
 	}
 
-	public function contarReceitasPorMes(){
+	public function contarReceitasPorMes()
+	{
 		global $_user;
 		$sql = "SELECT SUM(valor) AS valor_receita, COUNT(*) tot_receita FROM tramitacao 
-		WHERE MONTH(data) = ".$_REQUEST['periodo']." AND tipo_tramitacao like 'RECEITA' AND idusuario = $_user->id_usuario";
+		WHERE MONTH(data) = " . $_REQUEST['periodo'] . " AND tipo_tramitacao like 'RECEITA' AND idusuario = $_user->id_usuario";
 		if ($rs = parent::fetch_all($sql)) {
 			foreach ($rs as $row) {
 				$col = array();
@@ -345,4 +355,27 @@ class tramitacao extends database
 		}
 	}
 
+	public function contarEstimativas()
+	{
+		global $_user;
+		$sql = "SELECT SUM(valor) AS valor, tipo_tramitacao 
+		FROM tramitacao 
+		WHERE idusuario = $_user->id_usuario AND YEAR(data) = YEAR(CURDATE()) AND pago = 'S'";
+
+		if($_REQUEST['mes']) $sql.= " AND MONTH(data) = ".$_REQUEST['mes'];
+		else $sql.= " AND MONTH(data) = MONTH(CURDATE())";
+
+		$sql .= " GROUP BY tipo_tramitacao";
+
+		if ($rs = parent::fetch_all($sql)) {
+			foreach ($rs as $row) {
+				$col = array();
+				foreach ($row as $k => $v) {
+					$col[$k] = ($v);
+				}
+				$rows[] = $col;
+			}
+			return array('data' => $rows);
+		}
+	}
 }

@@ -5,7 +5,8 @@ class database extends mysqli {
 	# overwrite parent __construct
 	public function __construct() {
 		parent::__construct(DB_HOST, DB_USER, DB_PASSWORD, DB_DB);
-
+		parent::set_charset(CHARSET);
+		
 		# check if connect errno is set
 		if (mysqli_connect_errno()) {
 			throw new RuntimeException('Não posso acessar o banco de dados: ' . mysqli_connect_error());
@@ -79,7 +80,7 @@ class database extends mysqli {
 	# display error
 	public function get_error() {
 		if( $this->errno || $this->error ) 
-			return sprintf("{\"error\": \"(%d) %s\"}", $this->errno, $this->error);
+			return sprintf("error (%d): %s", $this->errno, $this->error);
 	}
 	
 	# close
@@ -91,7 +92,6 @@ class database extends mysqli {
 	########
 	# More #
 	########
-
 	public function insert() {
 		$tabela = get_class($this);
 		$atributos = array_keys(get_object_vars($this));
@@ -192,7 +192,7 @@ class database extends mysqli {
 		if ( $tableName ) {
 			$sql = "SELECT update_time
 			FROM information_schema.tables
-			WHERE table_schema = 'sigpol4'
+			WHERE table_schema = '".DB_DB."'
 			AND table_name = '$tableName'";
 
 			$rs = self::fetch_all($sql);
